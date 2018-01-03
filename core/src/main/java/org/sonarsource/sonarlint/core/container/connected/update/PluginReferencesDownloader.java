@@ -29,8 +29,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonarsource.sonarlint.core.client.api.connected.SonarAnalyzer;
 import org.sonarsource.sonarlint.core.container.connected.SonarLintWsClient;
 import org.sonarsource.sonarlint.core.container.storage.ProtobufUtil;
@@ -44,7 +44,7 @@ import org.sonarsource.sonarlint.core.util.ws.WsResponse;
 
 public class PluginReferencesDownloader {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PluginReferencesDownloader.class);
+  private static final Logger LOG = Loggers.get(PluginReferencesDownloader.class);
 
   private final PluginCache pluginCache;
   private final SonarLintWsClient wsClient;

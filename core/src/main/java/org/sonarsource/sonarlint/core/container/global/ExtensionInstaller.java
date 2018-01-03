@@ -20,13 +20,13 @@
 package org.sonarsource.sonarlint.core.container.global;
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.api.ExtensionProvider;
 import org.sonar.api.Plugin;
 import org.sonar.api.SonarRuntime;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.profiles.ProfileDefinition;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonarsource.sonarlint.core.container.ComponentContainer;
 import org.sonarsource.sonarlint.core.plugin.PluginCacheLoader;
 import org.sonarsource.sonarlint.core.plugin.PluginInfo;
@@ -34,7 +34,7 @@ import org.sonarsource.sonarlint.core.plugin.PluginRepository;
 
 public class ExtensionInstaller {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ExtensionInstaller.class);
+  private static final Logger LOG = Loggers.get(ExtensionInstaller.class);
 
   private final SonarRuntime sqRuntime;
   private final PluginRepository pluginRepository;
