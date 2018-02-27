@@ -23,6 +23,8 @@ import com.google.common.annotations.VisibleForTesting;
 import java.nio.file.Path;
 import java.time.LocalDate;
 
+import javax.annotation.Nullable;
+
 import static org.sonarsource.sonarlint.core.telemetry.TelemetryUtils.dayChanged;
 
 /**
@@ -101,9 +103,17 @@ public class TelemetryManager {
     data.setLastUploadTime();
     saveNow();
     client.upload(data);
+    data.clearAnalyzers();
+    saveNow();
   }
 
-  public void usedAnalysis() {
+  public void analysisDoneOnSingleFile(@Nullable String fileExtension, int analysisTimeMs) {
+    String language = TelemetryUtils.getLanguage(fileExtension);
+    data.setUsedAnalysis(language, analysisTimeMs);
+    saveLazily();
+  }
+
+  public void analysisDoneOnMultipleFiles() {
     data.setUsedAnalysis();
     saveLazily();
   }

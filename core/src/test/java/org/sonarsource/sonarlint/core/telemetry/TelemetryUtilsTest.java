@@ -19,13 +19,16 @@
  */
 package org.sonarsource.sonarlint.core.telemetry;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
+import static org.sonarsource.sonarlint.core.telemetry.TelemetryUtils.dayChanged;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import org.junit.Test;
+import java.util.Collections;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.sonarsource.sonarlint.core.telemetry.TelemetryUtils.dayChanged;
+import org.junit.Test;
 
 public class TelemetryUtilsTest {
   @Test
@@ -51,6 +54,32 @@ public class TelemetryUtilsTest {
   @Test
   public void dayChanged_with_hours_should_return_false_if_day_same() {
     assertThat(dayChanged(LocalDateTime.now(), 100)).isFalse();
+  }
+
+  @Test
+  public void create_analyzer_performance_payload() {
+    TelemetryAnalyzerPerformance perf = new TelemetryAnalyzerPerformance();
+    for (int i = 0; i < 10; i++) {
+      perf.registerAnalysis(1000);
+    }
+    for (int i = 0; i < 20; i++) {
+      perf.registerAnalysis(2000);
+    }
+    for (int i = 0; i < 20; i++) {
+      perf.registerAnalysis(200);
+    }
+    assertThat(perf.analysisCount()).isEqualTo(50);
+    TelemetryAnalyzerPerformancePayload[] payload = TelemetryUtils.toPayload(Collections.singletonMap("java", perf));
+    assertThat(payload).hasSize(1);
+    assertThat(payload[0].language()).isEqualTo("java");
+    assertThat(payload[0].distribution()).containsExactly(
+      entry("0-300", 40),
+      entry("300-500", 0),
+      entry("500-1000", 0),
+      entry("1000-2000", 20),
+      entry("2000-4000", 40),
+      entry("4000+", 0));
+
   }
 
   @Test
